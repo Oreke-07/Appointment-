@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Welcome, {{ user['username'] }}</h2>
+    <p>Email: {{ user['email'] }}</p>
+    {% if user['phone'] %}
+        <p>Phone: {{ user['phone'] }}</p>
+    {% endif %}
+    <div class="action-row">
+        <a class="btn btn-primary" href="{{ url_for('book_appointment') }}">Book Appointment</a>
+        <a class="btn btn-secondary" href="{{ url_for('my_appointments') }}">View Appointments</a>
+        <a class="btn btn-secondary" href="{{ url_for('profile') }}">Edit Profile</a>
+    </div>
+</div>
+
+<div class="card stats-grid">
+    {% for status, label in status_labels.items() %}
+        <div class="stat-card">
+            <span class="stat-value">{{ counts[status] }}</span>
+            <span class="stat-label">{{ label }}</span>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+    <h3>Upcoming appointments</h3>
+    {% if upcoming %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in upcoming %}
+                <tr>
+                    <td>{{ appointment['service'] }}</td>
+                    <td>{{ appointment['appointment_date'] }}</td>
+                    <td>{{ appointment['appointment_time'] }}</td>
+                    <td><span class="badge {{ status_classes[appointment['status']] }}">{{ status_labels[appointment['status']] }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No upcoming appointments.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div>
+        <h1>Book your appointment quickly.</h1>
+        <p>A simple appointment system for managing services, dates, and reminders in one place.</p>
+        <div style="margin-top: 1rem;">
+            <a class="btn btn-primary" href="{{ url_for('register') }}">Get Started</a>
+            <a class="btn btn-secondary" href="{{ url_for('login') }}">Login</a>
+        </div>
+    </div>
+    <div class="card">
+        <h3>Why use this app?</h3>
+        <ul>
+            <li>Easy booking flow</li>
+            <li>Simple dashboard</li>
+            <li>Track upcoming appointments</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}My Appointments{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="action-row">
+        <h2>My appointments</h2>
+        <form class="search-form" method="get" action="{{ url_for('my_appointments') }}">
+            <select name="status">
+                <option value="all" {% if selected_status == 'all' %}selected{% endif %}>All statuses</option>
+                {% for status, label in status_labels.items() %}
+                    <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <input type="search" name="search" placeholder="Search services or notes" value="{{ search_query }}">
+            <button class="btn btn-secondary" type="submit">Filter</button>
+        </form>
+    </div>
+
+    {% if appointments %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment['service'] }}</td>
+                    <td>{{ appointment['appointment_date'] }}</td>
+                    <td>{{ appointment['appointment_time'] }}</td>
+                    <td><span class="badge {{ status_classes[appointment['status']] }}">{{ status_labels[appointment['status']] }}</span></td>
+                    <td>{{ appointment['notes'] or '-' }}</td>
+                    <td class="action-column">
+                        {% if appointment['status'] != 'cancelled' %}
+                            <a class="btn btn-secondary" href="{{ url_for('edit_appointment', appointment_id=appointment['id']) }}">Edit</a>
+                            <form method="post" action="{{ url_for('cancel_appointment', appointment_id=appointment['id']) }}">
+                                <button class="btn btn-secondary" type="submit">Cancel</button>
+                            </form>
+                        {% else %}
+                            <span class="muted">None</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No appointments booked yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

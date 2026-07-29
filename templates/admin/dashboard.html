@@ -1,0 +1,60 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="card dashboard-grid">
+    <div class="admin-card">
+        <span class="stat-value">{{ totals['users'] }}</span>
+        <span class="stat-label">Users</span>
+    </div>
+    <div class="admin-card">
+        <span class="stat-value">{{ totals['services'] }}</span>
+        <span class="stat-label">Services</span>
+    </div>
+    <div class="admin-card">
+        <span class="stat-value">{{ totals['appointments'] }}</span>
+        <span class="stat-label">Appointments</span>
+    </div>
+    <div class="admin-card">
+        <span class="stat-value">{{ totals['pending'] }}</span>
+        <span class="stat-label">Pending</span>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+    <div class="action-row">
+        <h2>Recent appointments</h2>
+        <div>
+            <a class="btn btn-secondary" href="{{ url_for('admin_users') }}">Manage Users</a>
+            <a class="btn btn-secondary" href="{{ url_for('admin_services') }}">Services</a>
+            <a class="btn btn-secondary" href="{{ url_for('admin_appointments') }}">Appointments</a>
+        </div>
+    </div>
+    {% if recent %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in recent %}
+                <tr>
+                    <td>{{ appointment['username'] }}</td>
+                    <td>{{ appointment['service_name'] }}</td>
+                    <td>{{ appointment['appointment_date'] }}</td>
+                    <td>{{ appointment['appointment_time'] }}</td>
+                    <td><span class="badge {{ status_classes[appointment['status']] }}">{{ status_labels[appointment['status']] }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No recent appointments found.</p>
+    {% endif %}
+</div>
+{% endblock %}

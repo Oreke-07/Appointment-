@@ -1,0 +1,39 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="action-row">
+        <h2>Manage users</h2>
+        <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Admin</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user['username'] }}</td>
+                <td>{{ user['email'] }}</td>
+                <td>{{ user['phone'] or '-' }}</td>
+                <td>{{ user['role'] }}</td>
+                <td>{{ user['created_at'] }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('toggle_user_role', user_id=user['id']) }}">
+                        <button class="btn btn-secondary" type="submit">Toggle role</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

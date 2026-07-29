@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Edit Appointment{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 640px; margin: 2rem auto;">
+    <h2>Edit appointment</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="service_id">Service</label>
+            <select id="service_id" name="service_id" required>
+                <option value="">Select a service</option>
+                {% for service in services %}
+                    <option value="{{ service['id'] }}" {% if service['id'] == appointment['service_id'] %}selected{% endif %}>
+                        {{ service['name'] }} &mdash; {{ service['category'] }} ({{ service['duration'] }} min)
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="appointment_date">Date</label>
+            <input type="date" id="appointment_date" name="appointment_date" value="{{ appointment['appointment_date'] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="appointment_time">Time</label>
+            <input type="time" id="appointment_time" name="appointment_time" value="{{ appointment['appointment_time'] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                {% for value, label in status_labels.items() %}
+                    <option value="{{ value }}" {% if appointment['status'] == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="4">{{ appointment['notes'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="reminder_minutes">Reminder (minutes before)</label>
+            <input type="number" id="reminder_minutes" name="reminder_minutes" value="{{ appointment['reminder_minutes'] or '' }}" min="0">
+        </div>
+        <button class="btn btn-primary" type="submit">Update appointment</button>
+    </form>
+</div>
+{% endblock %}

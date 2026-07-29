@@ -1,0 +1,54 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Manage Appointments{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="action-row">
+        <h2>Manage appointments</h2>
+        <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Admin</a>
+    </div>
+    <form class="search-form" method="get" action="{{ url_for('admin_appointments') }}">
+        <select name="status">
+            <option value="all" {% if selected_status == 'all' %}selected{% endif %}>All statuses</option>
+            {% for status, label in status_labels.items() %}
+                <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-secondary" type="submit">Filter</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment['username'] }}<br><small>{{ appointment['email'] }}</small></td>
+                <td>{{ appointment['service_name'] }}</td>
+                <td>{{ appointment['appointment_date'] }}</td>
+                <td>{{ appointment['appointment_time'] }}</td>
+                <td><span class="badge {{ status_classes[appointment['status']] }}">{{ status_labels[appointment['status']] }}</span></td>
+                <td>
+                    <form method="post" action="{{ url_for('admin_update_appointment_status', appointment_id=appointment['id']) }}">
+                        <select name="status">
+                            {% for value, label in status_labels.items() %}
+                                <option value="{{ value }}" {% if appointment['status'] == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-secondary" type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Manage Services{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="action-row">
+        <h2>Manage services</h2>
+        <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Admin</a>
+    </div>
+    <form method="post" class="service-form">
+        <div class="form-group">
+            <label for="name">Service Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category">
+        </div>
+        <div class="form-group">
+            <label for="duration">Duration (minutes)</label>
+            <input type="number" id="duration" name="duration" required>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Add service</button>
+    </form>
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+    <h3>Available services</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service['name'] }}</td>
+                <td>{{ service['category'] or '-' }}</td>
+                <td>{{ service['duration'] or '-' }} min</td>
+                <td>${{ service['price'] or '-' }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('delete_service', service_id=service['id']) }}">
+                        <button class="btn btn-secondary" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
